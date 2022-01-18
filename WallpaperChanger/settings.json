@@ -1,0 +1,18 @@
+{
+  "screens": [
+    {
+      "path": "G:\\Mega\\Art",
+      "depth": 1,
+      "orientation": "Landscape",
+      "minHeight": 0,
+      "minWidth": 0
+    },
+    {
+      "path": "G:\\Mega\\Art",
+      "depth": 1,
+      "orientation": "Portrait",
+      "minHeight": 0,
+      "minWidth": 0
+    }
+  ]
+}
