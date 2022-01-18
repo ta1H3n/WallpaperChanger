@@ -2,7 +2,7 @@
 Allows selecting different folder slideshow for each of your monitors. With options how deep to crawl in subdirectories, filter on images based on orientation (Portrait|Landscape) and resolution.
 
 ### Usage
-- Compile with Visual Studio or dotnet.
+- Download from Releases or compile yourself with dotnet.
 - Extract in a folder of your choice.
 - Edit Settings.json for each of your screens:
   - Screens are in order (like in your Display settings window), you can add as many as you want.
