@@ -1,18 +1,44 @@
 {
+  "index": 0,
   "screens": [
-    {
-      "path": "G:\\Mega\\Art",
-      "depth": 1,
-      "orientation": "Landscape",
-      "minHeight": 0,
-      "minWidth": 0
-    },
-    {
-      "path": "G:\\Mega\\Art",
-      "depth": 1,
-      "orientation": "Portrait",
-      "minHeight": 0,
-      "minWidth": 0
-    }
-  ]
+    [
+      {
+        "path": "G:\\Mega\\Art",
+        "depth": 1,
+        "orientation": "Landscape",
+        "ratio": 1,
+        "minHeight": 0,
+        "minWidth": 0
+      },
+      {
+        "path": "G:\\Mega\\Art\\Cupcakes",
+        "exclude": [
+          "Cute"
+        ],
+        "depth": 2,
+        "orientation": "Portrait",
+        "ratio": 1,
+        "minHeight": 0,
+        "minWidth": 0
+      }
+    ],
+    [
+      {
+        "path": "G:\\Mega\\Art\\Cupcakes",
+        "depth": 1,
+        "orientation": "Landscape",
+        "ratio": 1,
+        "minHeight": 0,
+        "minWidth": 0
+      },
+      {
+        "path": "G:\\Mega\\Art\\Cupcakes",
+        "depth": 1,
+        "orientation": "Portrait",
+        "ratio": 1,
+        "minHeight": 0,
+        "minWidth": 0
+      }
+    ]
+  ],
 }

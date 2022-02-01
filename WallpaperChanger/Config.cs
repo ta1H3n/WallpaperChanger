@@ -6,8 +6,11 @@ namespace WallpaperChanger
 {
     public sealed class Config
     {
+        [JsonProperty("index")]
+        public static int Index { get; set; }
+
         [JsonProperty("screens")]
-        public static List<ScreenSettings> Screens { get; set; } = new List<ScreenSettings>();
+        public static List<List<ScreenSettings>> Screens { get; set; } = new List<List<ScreenSettings>>();
 
         static Config()
         {

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -8,10 +9,14 @@ namespace WallpaperChanger
     {
         [JsonProperty("path")]
         public string Path { get; set; }
+        [JsonProperty("exclude")]
+        public List<string> Exclude { get; set; } = new List<string>();
         [JsonProperty("depth")]
         public int Depth { get; set; } = 0;
         [JsonProperty("orientation")]
         public ScreenOrientation Orientation { get; set; } = ScreenOrientation.Any;
+        [JsonProperty("ratio")]
+        public double Ratio { get; set; } = 1;
         [JsonProperty("minHeight")]
         public int MinHeight { get; set; } = -1;
         [JsonProperty("minWidth")]
@@ -23,11 +28,11 @@ namespace WallpaperChanger
             switch (Orientation)
             {
                 case ScreenOrientation.Landscape:
-                    if (img.Height > img.Width)
+                    if (img.Height > img.Width * Ratio)
                         return false;
                     break;
                 case ScreenOrientation.Portrait:
-                    if (img.Width > img.Height)
+                    if (img.Width > img.Height * Ratio)
                         return false;
                     break;
             }

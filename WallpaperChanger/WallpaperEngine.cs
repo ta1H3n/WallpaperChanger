@@ -21,7 +21,7 @@ namespace WallpaperChanger
 
         Point PrimaryMonitorPoint = new Point(0, 0);
         readonly string DefaultBackgroundFile;
-        Dictionary<string, Image> Images = new Dictionary<string, Image>();
+        readonly Dictionary<string, Image> Images = new Dictionary<string, Image>();
 
 
         readonly List<string> Screens = new List<string>();
