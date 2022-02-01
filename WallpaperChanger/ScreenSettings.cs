@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -7,20 +6,19 @@ namespace WallpaperChanger
 {
     public class ScreenSettings
     {
-        [JsonProperty("path")]
-        public string Path { get; set; }
-        [JsonProperty("exclude")]
-        public List<string> Exclude { get; set; } = new List<string>();
-        [JsonProperty("depth")]
-        public int Depth { get; set; } = 0;
         [JsonProperty("orientation")]
         public ScreenOrientation Orientation { get; set; } = ScreenOrientation.Any;
-        [JsonProperty("ratio")]
-        public double Ratio { get; set; } = 1;
+        [JsonProperty("imageAspectRatio")]
+        public double ImageAspectRatio { get; set; } = 1;
+        [JsonProperty("imageToScreenSizeRatio")]
+        public double ImageToScreenSizeRatio { get; set; } = 0;
         [JsonProperty("minHeight")]
-        public int MinHeight { get; set; } = -1;
+        public int MinHeight { get; set; } = 0;
         [JsonProperty("minWidth")]
-        public int MinWidth { get; set; } = -1;
+        public int MinWidth { get; set; } = 0;
+
+        [JsonProperty("directories")]
+        public int[] Directories { get; set; } = new int[0];
 
 
         public bool IsValidImage(Image img, Screen screen)
@@ -28,23 +26,23 @@ namespace WallpaperChanger
             switch (Orientation)
             {
                 case ScreenOrientation.Landscape:
-                    if (img.Height > img.Width * Ratio)
+                    if (img.Height > img.Width * ImageAspectRatio)
                         return false;
                     break;
                 case ScreenOrientation.Portrait:
-                    if (img.Width > img.Height * Ratio)
+                    if (img.Width > img.Height * ImageAspectRatio)
                         return false;
                     break;
             }
 
-            if (MinWidth == 0 && img.Width < screen.WorkingArea.Width)
+            if (img.Width < screen.WorkingArea.Width * ImageToScreenSizeRatio)
                 return false;
-            else if (MinWidth != -1 && img.Width < MinWidth)
+            else if (img.Width < MinWidth)
                 return false;
 
-            if (MinHeight == 0 && img.Height < screen.WorkingArea.Height)
+            if (img.Height < screen.WorkingArea.Height * ImageToScreenSizeRatio)
                 return false;
-            else if (MinHeight != -1 && img.Height < MinHeight)
+            else if (img.Height < MinHeight)
                 return false;
 
             return true;

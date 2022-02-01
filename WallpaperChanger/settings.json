@@ -3,42 +3,44 @@
   "screens": [
     [
       {
-        "path": "G:\\Mega\\Art",
-        "depth": 1,
         "orientation": "Landscape",
-        "ratio": 1,
-        "minHeight": 0,
-        "minWidth": 0
+        "imageAspectRatio": 0.8,
+        "imageToScreenSizeRatio": 0.8,
+        "directories": [ 0 ]
       },
       {
-        "path": "G:\\Mega\\Art\\Cupcakes",
-        "exclude": [
-          "Cute"
-        ],
-        "depth": 2,
         "orientation": "Portrait",
-        "ratio": 1,
-        "minHeight": 0,
-        "minWidth": 0
+        "imageAspectRatio": 0.8,
+        "imageToScreenSizeRatio": 0.8,
+        "directories": [ 1 ]
       }
     ],
     [
       {
-        "path": "G:\\Mega\\Art\\Cupcakes",
-        "depth": 1,
         "orientation": "Landscape",
-        "ratio": 1,
-        "minHeight": 0,
-        "minWidth": 0
+        "imageAspectRatio": 0.8,
+        "directories": [ 2 ]
       },
       {
-        "path": "G:\\Mega\\Art\\Cupcakes",
-        "depth": 1,
         "orientation": "Portrait",
-        "ratio": 1,
-        "minHeight": 0,
-        "minWidth": 0
+        "imageAspectRatio": 0.8,
+        "directories": [ 2 ]
       }
     ]
   ],
+  "directories": [
+    {
+      "path": "G:\\Mega\\Art",
+      "exclude": [ "Cupcakes", "Mobile" ],
+      "depth": 999
+    },
+    {
+      "path": "G:\\Mega\\Art\\Mobile",
+      "depth": 999
+    },
+    {
+      "path": "G:\\Mega\\Art\\Cupcakes",
+      "depth": 999
+    }
+  ]
 }

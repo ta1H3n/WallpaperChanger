@@ -12,6 +12,9 @@ namespace WallpaperChanger
         [JsonProperty("screens")]
         public static List<List<ScreenSettings>> Screens { get; set; } = new List<List<ScreenSettings>>();
 
+        [JsonProperty("directories")]
+        public static List<WallpaperDirectory> Directories { get; set; } = new List<WallpaperDirectory>();
+
         static Config()
         {
             string json = "";
