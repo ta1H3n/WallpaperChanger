@@ -12,44 +12,57 @@ namespace WallpaperChanger
     {
         public static void Main()
         {
-            var monitors = Screen.AllScreens;
-            var images = new Dictionary<string, Image>();
-
-            var screens = Config.Screens[Config.Index];
-            var profiles = Config.Directories;
-
-            string res = $"{DateTime.Now}\n";
-
-            int i = 0;
-            foreach (var screen in screens)
+            try
             {
-                var wallpapers = new List<string>();
+                var monitors = Screen.AllScreens;
+                var images = new Dictionary<string, Image>();
 
-                foreach (var p in screen.Directories)
+                var screens = Config.Screens[Config.Index];
+                var profiles = Config.Directories;
+
+                string res = $"{DateTime.Now}\n";
+
+                int i = 0;
+                List<string> selected = new List<string>();
+                foreach (var screen in screens)
                 {
-                    wallpapers.AddRange(profiles[p].ProcessDirectory());
-                }
+                    var wallpapers = new List<string>();
 
-                Image img;
-                for (int l = 0; l < wallpapers.Count; l++)
-                {
-                    int j = new Random().Next(wallpapers.Count);
-                    img = Image.FromFile(wallpapers[j]);
-
-                    if (screen.IsValidImage(img, monitors[i]))
+                    foreach (var p in screen.Directories)
                     {
-                        images.Add(monitors[i].DeviceName, img);
-                        CreateOrReplaceShortcut(wallpapers[j], i.ToString());
-                        res += $"{wallpapers[j]}\n";
-                        break;
+                        wallpapers.AddRange(profiles[p].ProcessDirectory());
                     }
-                }
-                i++;
-            }
 
-            var client = new WallpaperEngine(images);
-            client.SetWallpapers();
-            AppendHistory(res);
+                    Image img;
+                    for (int l = 0; l < wallpapers.Count; l++)
+                    {
+                        int j = new Random().Next(wallpapers.Count);
+                        img = Image.FromFile(wallpapers[j]);
+
+                        if (screen.IsValidImage(img, monitors[i]))
+                        {
+                            images.Add(monitors[i].DeviceName, img);
+                            selected.Add(wallpapers[j]);
+                            res += $"{wallpapers[j]}\n";
+                            break;
+                        }
+                    }
+                    i++;
+                }
+
+                var client = new WallpaperEngine(images);
+                client.SetWallpapers();
+
+                AppendHistory(res);
+                for (int j = 0; j < selected.Count; j++)
+                {
+                    CreateOrReplaceShortcut(selected[j], j.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteToFile($"\\log\\ErrorLog_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt", ex.ToString());
+            }
         }
 
 
@@ -62,16 +75,24 @@ namespace WallpaperChanger
             WshShell wsh = new WshShell();
             IWshShortcut shortcut = wsh.CreateShortcut(target) as IWshShortcut;
             shortcut.Arguments = "";
-            shortcut.TargetPath = path;
+            shortcut.TargetPath = Path.GetFullPath(path);
             shortcut.Save();
         }
 
         private static void AppendHistory(string text)
         {
-            string target = Directory.GetCurrentDirectory() + "\\history.txt.";
+            WriteToFile("\\history.txt.", text);
+        }
 
-            using (FileStream fs = new FileStream(target, FileMode.Append)) {
-                using (StreamWriter sw = new StreamWriter(fs)) { 
+        private static void WriteToFile(string file, string text)
+        {
+            string target = Path.Combine(Directory.GetCurrentDirectory() + file);
+            Directory.CreateDirectory(Path.GetDirectoryName(target));
+
+            using (FileStream fs = new FileStream(target, FileMode.Append))
+            {
+                using (StreamWriter sw = new StreamWriter(fs))
+                {
                     sw.WriteLine(text);
                 }
             }
