@@ -11,13 +11,17 @@ Allows selecting different folder slideshow for each of your monitors. With opti
 ### Settings
 Edit `Settings.json`:
 - `index` - which list of screens to use:
-- `screens` - List of list of screens. You can add as many as you want, the list with `index` index will be used.
-  - `orientation` - `Landscape`, `Portrait` or `Any`. Default: Any
-  - `imageAspectRatio` - maximum image width/height or height/width depending on `orientation`. Default: 1. Expected range 0-1
-  - `imageToScreenSizeRatio` - minimum image height/screen height and image width/screen width. Default: 0. Expected range 0-1
-  - `minHeight` - minimum height of the image. Default: 0
-  - `minWidth` - minimum width of the image. Default: 0
-  - `directories` - index of the directories defined below to search for wallpapers in.
+- `screens` - List of list of screens. You can add as many as you want, the list with `index` index will be used. Accepts two different configurations:
+  - Getting image from your file system:
+    - `orientation` - `Landscape`, `Portrait` or `Any`. Default: Any
+    - `imageAspectRatio` - maximum image width/height or height/width depending on `orientation`. Default: 1. Expected range 0-1
+    - `imageToScreenSizeRatio` - minimum image height/screen height and image width/screen width. Default: 0. Expected range 0-1
+    - `minHeight` - minimum height of the image. Default: 0
+    - `minWidth` - minimum width of the image. Default: 0
+    - `directories` - index of the directories defined below to search for wallpapers in.
+  - Getting images from a booru
+    - `booru` - `Konachan` `Gelbooru` `Danbooru` `E621` `Allthefallen` `Sankaku` `Yandere`
+    - `tags` - array of string tags for image search
 - `directories` - You can add as many directories as you want:
   - `path` - path to a folder or an image.
   - `exclude` - exclude directories containing these keywords.
