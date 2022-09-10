@@ -1,9 +1,12 @@
 ﻿using IWshRuntimeLibrary;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Net;
 using System.Windows.Forms;
+using BooruSharp.Booru;
 
 
 namespace WallpaperChanger
@@ -26,25 +29,48 @@ namespace WallpaperChanger
                 List<string> selected = new List<string>();
                 foreach (var screen in screens)
                 {
-                    var wallpapers = new List<string>();
-
-                    foreach (var p in screen.Directories)
+                    if (screen.Booru != BooruType.File)
                     {
-                        wallpapers.AddRange(profiles[p].ProcessDirectory());
-                    }
-
-                    Image img;
-                    for (int l = 0; l < wallpapers.Count; l++)
-                    {
-                        int j = new Random().Next(wallpapers.Count);
-                        img = Image.FromFile(wallpapers[j]);
-
-                        if (screen.IsValidImage(img, monitors[i]))
+                        ABooru booru = screen.Booru switch
                         {
-                            images.Add(monitors[i].DeviceName, img);
-                            selected.Add(wallpapers[j]);
-                            res += $"{wallpapers[j]}\n";
-                            break;
+                            BooruType.Allthefallen => new Atfbooru(),
+                            BooruType.Danbooru => new DanbooruDonmai(),
+                            BooruType.E621 => new E621(),
+                            BooruType.Gelbooru => new Gelbooru(),
+                            BooruType.Konachan => new Konachan(),
+                            BooruType.Sankaku => new SankakuComplex(),
+                            BooruType.Yandere => new Yandere(),
+                            _ => throw new InvalidEnumArgumentException()
+                        };
+                        
+                        var result = booru.GetRandomPostAsync(screen.Tags).Result;
+                        byte[] imageBytes = new WebClient().DownloadData(result.FileUrl.AbsoluteUri);
+                        var image = Image.FromStream(new MemoryStream(imageBytes));
+                        
+                        res += $"{result.PostUrl}\n";
+                        images.Add(monitors[i].DeviceName, image);
+                    }
+                    else
+                    {
+                        var wallpapers = new List<string>();
+                        foreach (var p in screen.Directories)
+                        {
+                            wallpapers.AddRange(profiles[p].ProcessDirectory());
+                        }
+
+                        Image img;
+                        for (int l = 0; l < wallpapers.Count; l++)
+                        {
+                            int j = new Random().Next(wallpapers.Count);
+                            img = Image.FromFile(wallpapers[j]);
+
+                            if (screen.IsValidImage(img, monitors[i]))
+                            {
+                                images.Add(monitors[i].DeviceName, img);
+                                selected.Add(wallpapers[j]);
+                                res += $"{wallpapers[j]}\n";
+                                break;
+                            }
                         }
                     }
                     i++;

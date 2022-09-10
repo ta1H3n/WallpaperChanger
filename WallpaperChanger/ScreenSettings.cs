@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -19,6 +20,12 @@ namespace WallpaperChanger
 
         [JsonProperty("directories")]
         public int[] Directories { get; set; } = new int[0];
+
+
+        [JsonProperty("booru")] 
+        public BooruType Booru { get; set; } = BooruType.File;
+        [JsonProperty("tags")] 
+        public string[] Tags { get; set; } = Array.Empty<string>();
 
 
         public bool IsValidImage(Image img, Screen screen)
@@ -54,5 +61,17 @@ namespace WallpaperChanger
         Portrait,
         Landscape,
         Any
+    }
+
+    public enum BooruType
+    {
+        File,
+        Konachan,
+        Gelbooru,
+        Danbooru,
+        E621,
+        Allthefallen,
+        Sankaku,
+        Yandere
     }
 }
