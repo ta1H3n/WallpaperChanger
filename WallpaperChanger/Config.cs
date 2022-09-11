@@ -1,19 +1,17 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
+using WallpaperChanger.Interfaces;
 
 namespace WallpaperChanger
 {
     public sealed class Config
     {
-        [JsonProperty("index")]
-        public static int Index { get; set; }
+        public static string Key { get; set; }
 
-        [JsonProperty("screens")]
-        public static List<List<ScreenSettings>> Screens { get; set; } = new List<List<ScreenSettings>>();
+        public static Dictionary<string, List<List<string>>> Screens { get; set; }
 
-        [JsonProperty("directories")]
-        public static List<WallpaperDirectory> Directories { get; set; } = new List<WallpaperDirectory>();
+        public static List<IProviderCnfiguration> Configurations { get; set; }
 
         static Config()
         {
