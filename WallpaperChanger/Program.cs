@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using BooruSharp.Booru;
 
@@ -27,28 +28,34 @@ namespace WallpaperChanger
 
                 int i = 0;
                 List<string> selected = new List<string>();
+
+                var tasks = new Task[2];
                 foreach (var screen in screens)
                 {
                     if (screen.Booru != BooruType.File)
                     {
-                        ABooru booru = screen.Booru switch
+                        var monitorName = monitors[i].DeviceName;
+                        tasks[i] = Task.Run(() =>
                         {
-                            BooruType.Allthefallen => new Atfbooru(),
-                            BooruType.Danbooru => new DanbooruDonmai(),
-                            BooruType.E621 => new E621(),
-                            BooruType.Gelbooru => new Gelbooru(),
-                            BooruType.Konachan => new Konachan(),
-                            BooruType.Sankaku => new SankakuComplex(),
-                            BooruType.Yandere => new Yandere(),
-                            _ => throw new InvalidEnumArgumentException()
-                        };
-                        
-                        var result = booru.GetRandomPostAsync(screen.Tags).Result;
-                        byte[] imageBytes = new WebClient().DownloadData(result.FileUrl.AbsoluteUri);
-                        var image = Image.FromStream(new MemoryStream(imageBytes));
-                        
-                        res += $"{result.PostUrl}\n";
-                        images.Add(monitors[i].DeviceName, image);
+                            ABooru booru = screen.Booru switch
+                            {
+                                BooruType.Allthefallen => new Atfbooru(),
+                                BooruType.Danbooru => new DanbooruDonmai(),
+                                BooruType.E621 => new E621(),
+                                BooruType.Gelbooru => new Gelbooru(),
+                                BooruType.Konachan => new Konachan(),
+                                BooruType.Sankaku => new SankakuComplex(),
+                                BooruType.Yandere => new Yandere(),
+                                _ => throw new InvalidEnumArgumentException()
+                            };
+
+                            var result = booru.GetRandomPostAsync(screen.Tags).Result;
+                            byte[] imageBytes = new WebClient().DownloadData(result.FileUrl.AbsoluteUri);
+                            var image = Image.FromStream(new MemoryStream(imageBytes));
+
+                            res += $"{result.PostUrl}\n";
+                            images.Add(monitorName, image);
+                        });
                     }
                     else
                     {
@@ -75,6 +82,8 @@ namespace WallpaperChanger
                     }
                     i++;
                 }
+
+                Task.WaitAll(tasks);
 
                 var client = new WallpaperEngine(images);
                 client.SetWallpapers();
