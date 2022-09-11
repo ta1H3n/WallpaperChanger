@@ -5,34 +5,67 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WallpaperChanger.Interfaces;
+using IWshRuntimeLibrary;
+using Newtonsoft.Json;
+using WallpaperChanger.Common;
 
 namespace WallpaperChanger.Files;
 
-public class FileImageProvider : IImageProvider<FileConfiguration>
+public class FileImageProvider : IImageProvider
 {
-    public Task<Image> GetImageAsync(FileConfiguration source, Screen screen)
+    [JsonProperty]
+    public ProviderType ProviderType { get; }
+    [JsonProperty]
+    public string Path { get; set; }
+    [JsonProperty]
+    public List<string> Exclude { get; set; } = new List<string>();
+    [JsonProperty]
+    public int Depth { get; set; } = 0;
+    
+    [JsonProperty]
+    public ScreenOrientation Orientation { get; set; } = ScreenOrientation.Any;
+    [JsonProperty]
+    public double ImageAspectRatio { get; set; } = 1;
+    [JsonProperty]
+    public double ImageToScreenSizeRatio { get; set; } = 0;
+    [JsonProperty]
+    public int MinHeight { get; set; } = 0; 
+    [JsonProperty]
+    public int MinWidth { get; set; } = 0;
+    
+    
+    public Task<ProviderResult> GetImageAsync(Screen screen)
     {
-        var wallpapers = ProcessDirectory(source).ToArray();
+        var wallpapers = ProcessDirectory().ToArray();
 
-        var count = wallpapers.Count();
         var rnd = new Random();
 
-        for (int i = 0; i < count && i < 10; i++)
+        foreach (var path in wallpapers.OrderBy(x => rnd.Next()))
         {
-            var path = wallpapers[rnd.Next(count)];
             var img = Image.FromFile(path);
-
-            if (IsValidImage(source, img, screen))
+            if (IsValidImage(img, screen))
             {
-                return Task.FromResult(img);
+                return Task.FromResult(new ProviderResult
+                {
+                    Image = img,
+                    Path = path
+                });
             }
         }
-
-        return Task.FromResult<Image>(null);
+        return Task.FromResult<ProviderResult>(new ProviderResult
+        {
+            Image = null,
+            Path = "No matches found"
+        });
     }
 
-    private static IEnumerable<string> ProcessDirectory(FileConfiguration config) => ProcessDirectory(config.Path, config.Depth, config.Exclude);
+    public Task AfterImageSet(Screen screen, ProviderResult result)
+    {
+        CreateOrReplaceShortcut(result.Path, screen.DeviceName.Replace("\\", "").Replace(".", ""));
+        return Task.CompletedTask;
+    }
+
+    private IEnumerable<string> ProcessDirectory() => ProcessDirectory(Path, Depth, Exclude);
     private static IEnumerable<string> ProcessDirectory(string targetDirectory, int depth, IReadOnlyCollection<string> exclude)
     {
         // Process the list of files found in the directory.
@@ -51,30 +84,50 @@ public class FileImageProvider : IImageProvider<FileConfiguration>
         }
     }
     
-    private static bool IsValidImage(FileConfiguration source, Image img, Screen screen)
+    private bool IsValidImage(Image img, Screen screen)
     {
-        switch (source.Orientation)
+        switch (Orientation)
         {
             case ScreenOrientation.Landscape:
-                if (img.Height > img.Width * source.ImageAspectRatio)
+                if (img.Height > img.Width * ImageAspectRatio)
                     return false;
                 break;
             case ScreenOrientation.Portrait:
-                if (img.Width > img.Height * source.ImageAspectRatio)
+                if (img.Width > img.Height * ImageAspectRatio)
                     return false;
                 break;
         }
 
-        if (img.Width < screen.WorkingArea.Width * source.ImageToScreenSizeRatio)
+        if (img.Width < screen.WorkingArea.Width * ImageToScreenSizeRatio)
             return false;
-        else if (img.Width < source.MinWidth)
+        else if (img.Width < MinWidth)
             return false;
 
-        if (img.Height < screen.WorkingArea.Height * source.ImageToScreenSizeRatio)
+        if (img.Height < screen.WorkingArea.Height * ImageToScreenSizeRatio)
             return false;
-        else if (img.Height < source.MinHeight)
+        else if (img.Height < MinHeight)
             return false;
 
         return true;
     }
+    
+    private static void CreateOrReplaceShortcut(string sourcePath, string name)
+    {
+        string target = Directory.GetCurrentDirectory() + "\\" + name + "_image_shortcut.lnk";
+        if (Directory.Exists(target))
+            Directory.Delete(target);
+
+        WshShell wsh = new WshShell();
+        IWshShortcut shortcut = wsh.CreateShortcut(target) as IWshShortcut;
+        shortcut.Arguments = "";
+        shortcut.TargetPath = System.IO.Path.GetFullPath(sourcePath);
+        shortcut.Save();
+    }
+}
+
+public enum ScreenOrientation
+{
+    Portrait,
+    Landscape,
+    Any
 }
