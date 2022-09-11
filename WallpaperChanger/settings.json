@@ -1,65 +1,19 @@
 {
-  "index": 2,
-  "screens": [
-    [
-      {
-        "orientation": "Landscape",
-        "imageAspectRatio": 0.8,
-        "imageToScreenSizeRatio": 0.8,
-        "directories": [ 0, 3 ]
-      },
-      {
-        "orientation": "Portrait",
-        "imageAspectRatio": 0.8,
-        "imageToScreenSizeRatio": 0.8,
-        "directories": [ 1, 3 ]
-      }
-    ],
-    [
-      {
-        "orientation": "Landscape",
-        "imageAspectRatio": 0.9,
-        "directories": [ 2, 4 ]
-      },
-      {
-        "orientation": "Portrait",
-        "imageAspectRatio": 0.9,
-        "directories": [ 2, 4 ]
-      }
-    ],
-    [
-      {
-        "booru": "Konachan",
-        "tags": [ "score:>100 height:>=1440 width:>=2560 rating:safe date:>2020-01-01" ]
-      },
-      {
-        "booru": "Yandere",
-        "tags": [ "score:>50 height:>=1920 width:>=1080 rating:safe date:>2020-01-01" ]
-      }
-    ]
-  ],
-  "directories": [
-    {
-      "path": "G:\\Mega\\Art",
-      "exclude": [ "Cupcakes", "Mobile" ],
-      "depth": 999
+  "Keys": [ "A", "B" ],
+  "Providers": {
+    "A": {
+      "ProviderType": "Booru",
+      "BooruType": "Gelbooru",
+      "Tags": [ "score:>100", "rating:safe" ]
     },
-    {
-      "path": "G:\\Mega\\Art\\Mobile",
-      "depth": 999
-    },
-    {
-      "path": "G:\\Mega\\Art\\Cupcakes",
-      "exclude": [ "Cute" ],
-      "depth": 999
-    },
-    {
-      "path": "G:\\Mega\\Art\\Cupcakes\\Cute",
-      "depth": 999
-    },
-    {
-      "path": "E:\\Steam\\SteamApps\\common\\Sprays",
-      "depth": 999
+    "B": {
+      "ProviderType": "File",
+      "Orientation": "Landscape",
+      "ImageAspectRatio": 0.8,
+      "ImageToScreenSizeRatio": 0.8,
+      "Path": "G:\\Mega\\Art",
+      "Exclude": [ "Cupcakes", "Mobile" ],
+      "Depth": 999
     }
-  ]
+  }
 }
