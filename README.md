@@ -1,5 +1,6 @@
 # WallpaperChanger
-Allows selecting different folder slideshow for each of your monitors. With options how deep to crawl in subdirectories, filter on images based on orientation (Portrait|Landscape) and resolution.
+Allows selecting different folder slideshow for each of your monitors. 
+Source can be your file system or booru image databases.
 
 ### Usage
 1. Download zip file from Releases or compile yourself with dotnet.
@@ -10,19 +11,20 @@ Allows selecting different folder slideshow for each of your monitors. With opti
 
 ### Settings
 Edit `Settings.json`:
-- `index` - which list of screens to use:
-- `screens` - List of list of screens. You can add as many as you want, the list with `index` index will be used. Accepts two different configurations:
+- `Keys` - keys of the configurations (one for each of your monitors)
+- `Providers` - configurations in a `"Key": { configuration }` pattern, where each configuration can have one the following types:
   - Getting image from your file system:
-    - `orientation` - `Landscape`, `Portrait` or `Any`. Default: Any
-    - `imageAspectRatio` - maximum image width/height or height/width depending on `orientation`. Default: 1. Expected range 0-1
-    - `imageToScreenSizeRatio` - minimum image height/screen height and image width/screen width. Default: 0. Expected range 0-1
-    - `minHeight` - minimum height of the image. Default: 0
-    - `minWidth` - minimum width of the image. Default: 0
-    - `directories` - index of the directories defined below to search for wallpapers in.
+    - `ProviderType` - `File`
+    - `Orientation` - `Landscape`, `Portrait` or `Any`. Default: Any
+    - `ImageAspectRatio` - maximum image width/height or height/width depending on `orientation`. Default: 1. Expected range 0-1
+    - `ImageToScreenSizeRatio` - minimum image height/screen height and image width/screen width. Default: 0. Expected range 0-1
+    - `MinHeight` - minimum height of the image. Default: 0
+    - `MinWidth` - minimum width of the image. Default: 0
+    - `Directories` - index of the directories defined below to search for wallpapers in.
+    - `Path` - path to a folder or an image.
+    - `Exclude` - exclude directories containing these keywords.
+    - `Depth` - how deep to recursively search subdirectories. Default: 0
   - Getting images from a booru
-    - `booru` - `Konachan` `Gelbooru` `Danbooru` `E621` `Allthefallen` `Sankaku` `Yandere`
-    - `tags` - array of string tags for image search
-- `directories` - You can add as many directories as you want:
-  - `path` - path to a folder or an image.
-  - `exclude` - exclude directories containing these keywords.
-  - `depth` - how deep to recursively search subdirectories. Default: 0
+    - `ProviderType` - `Booru`
+    - `Booru` - `Konachan` `Gelbooru` `Danbooru` `E621` `Allthefallen` `Sankaku` `Yandere`
+    - `Tags` - array of string tags for image search
