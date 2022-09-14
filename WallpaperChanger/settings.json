@@ -15,5 +15,21 @@
       "Exclude": [ "Cupcakes", "Mobile" ],
       "Depth": 999
     }
+  },
+  "Auth": {
+    "Booru": {
+      "Sankaku": {
+        "UserId": "",
+        "PasswordHash": ""
+      },
+      "Danbooru": {
+        "UserId": "",
+        "PasswordHash": ""
+      },
+      "Gelbooru": {
+        "UserId": "",
+        "PasswordHash": ""
+      }
+    }
   }
 }

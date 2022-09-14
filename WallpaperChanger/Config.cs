@@ -15,6 +15,8 @@ namespace WallpaperChanger
         public static List<string> Keys { get; set; }
         [JsonProperty]
         public static Dictionary<string, IImageProvider> Providers { get; set; } = new();
+        [JsonProperty]
+        public static Dictionary<ProviderType, Dictionary<BooruType, Auth>> Auth { get; set; }
 
         static Config()
         {
