@@ -25,13 +25,13 @@ public class BooruImageProvider : IImageProvider
     {
         ABooru booru = BooruType switch
         {
-            BooruType.Allthefallen => new Atfbooru(),
-            BooruType.Danbooru => new DanbooruDonmai(),
-            BooruType.E621 => new E621(),
-            BooruType.Gelbooru => new Gelbooru(),
-            BooruType.Konachan => new Konachan(),
-            BooruType.Sankaku => new SankakuComplex(),
-            BooruType.Yandere => new Yandere(),
+            BooruType.Allthefallen => new Atfbooru() { Auth = GetAuth(BooruType.Allthefallen) },
+            BooruType.Danbooru => new DanbooruDonmai() { Auth = GetAuth(BooruType.Danbooru) },
+            BooruType.E621 => new E621() { Auth = GetAuth(BooruType.E621) },
+            BooruType.Gelbooru => new Gelbooru() { Auth = GetAuth(BooruType.Gelbooru) },
+            BooruType.Konachan => new Konachan() { Auth = GetAuth(BooruType.Konachan) },
+            BooruType.Sankaku => new SankakuComplex() { Auth = GetAuth(BooruType.Sankaku) },
+            BooruType.Yandere => new Yandere() { Auth = GetAuth(BooruType.Yandere) },
             _ => throw new InvalidEnumArgumentException()
         };
                         
@@ -55,6 +55,12 @@ public class BooruImageProvider : IImageProvider
 
         result.Image.Save(target);
         return Task.CompletedTask;
+    }
+
+    private BooruAuth GetAuth(BooruType booruType)
+    {
+        var auth = Config.Auth[ProviderType.Booru][booruType];
+        return new BooruAuth(auth.UserId, auth.PasswordHash);
     }
 }
 
