@@ -20,9 +20,8 @@ Edit `Settings.json`:
     - `ImageToScreenSizeRatio` - minimum image height/screen height and image width/screen width. Default: 0. Expected range 0-1
     - `MinHeight` - minimum height of the image. Default: 0
     - `MinWidth` - minimum width of the image. Default: 0
-    - `Directories` - index of the directories defined below to search for wallpapers in.
     - `Path` - path to a folder or an image.
-    - `Exclude` - exclude directories containing these keywords.
+    - `Exclude` - exclude paths containing these keywords.
     - `Depth` - how deep to recursively search subdirectories. Default: 0
   - Getting images from a booru
     - `ProviderType` - `Booru`
