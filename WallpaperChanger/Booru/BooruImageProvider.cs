@@ -59,8 +59,15 @@ public class BooruImageProvider : IImageProvider
 
     private BooruAuth GetAuth(BooruType booruType)
     {
-        var auth = Config.Auth[ProviderType.Booru][booruType];
-        return new BooruAuth(auth.UserId, auth.PasswordHash);
+        if (Config.Auth.TryGetValue(ProviderType.Booru, out var provider))
+        {
+            if (provider.TryGetValue(booruType, out var auth))
+            {
+                return new BooruAuth(auth.UserId, auth.PasswordHash);
+            }
+        }
+
+        return default;
     }
 }
 
