@@ -52,19 +52,24 @@ namespace WallpaperChanger
             //set Images in Dictionary in case there are previous Images
             if (File.Exists(DefaultBackgroundFile))
             {
-                using (var old = new Bitmap(DefaultBackgroundFile))
+                try
                 {
-                    foreach (Screen scr in Screen.AllScreens)
+                    using (var old = new Bitmap(DefaultBackgroundFile))
                     {
-                        if (Images.TryGetValue(scr.DeviceName, out Image val) && val == null)
+                        foreach (Screen scr in Screen.AllScreens)
                         {
-                            Rectangle rectangle = new Rectangle(PrimaryMonitorPoint.X + scr.Bounds.Left, PrimaryMonitorPoint.Y + scr.Bounds.Top, scr.Bounds.Width, scr.Bounds.Height);
-                            if (old.Width >= (rectangle.X + rectangle.Width) &&
-                                old.Height >= (rectangle.Y + rectangle.Height))
-                                Images[scr.DeviceName] = (Bitmap)old.Clone(rectangle, old.PixelFormat);
+                            if (Images.TryGetValue(scr.DeviceName, out Image val) && val == null)
+                            {
+                                Rectangle rectangle = new Rectangle(PrimaryMonitorPoint.X + scr.Bounds.Left,
+                                    PrimaryMonitorPoint.Y + scr.Bounds.Top, scr.Bounds.Width, scr.Bounds.Height);
+                                if (old.Width >= (rectangle.X + rectangle.Width) &&
+                                    old.Height >= (rectangle.Y + rectangle.Height))
+                                    Images[scr.DeviceName] = (Bitmap)old.Clone(rectangle, old.PixelFormat);
+                            }
                         }
                     }
                 }
+                catch {}
             }
         }
 
